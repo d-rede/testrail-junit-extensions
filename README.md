@@ -98,14 +98,26 @@ You may use the **@TestRail** annotation to:
 - Add an extra summary property to the test case
 - Add an extra description property to the test case
 
-_Examples:_
+**Example:** Add case "id" property
 
-Add case "id" property  
 
+
+Test code:
 ```java
-    @Test
-    @TestRail(id = "123")
-    public void CanAddNumbers() {}
+public class SumTests {
+
+  @Test
+  @TestRail(id = "123")
+  public void CanAddNumbers() {}
+}
+```
+Report testcase element:
+```xml
+<testcase name="CanAddNumbers" classname="tests.SumTests">
+  <properties>
+    <property name="case_id" value="123"/>
+  </properties>
+</testcase>
 ```
 
 ### New Extension
@@ -113,20 +125,28 @@ Add case "id" property
 A new JUnit 5 compatible Extension **TestRailTestReporterParameterResolver** can be used, so we can inject a **TestRailTestReporter** object as argument in the test methods.
 This allows you to add any custom property to the report, enhancing the way results are uploaded to TestRail.
 
-_Example:_
+**Example:** Add attachments to test result (supported by the [TestRail CLI](https://github.com/gurock/trcli))
 
-Add attachments to test result (supported by the [TestRail CLI](https://github.com/gurock/trcli))
-
+Test code:
 ```java
 @ExtendWith(TestRailTestReporterParameterResolver.class)
-public class TestRailEnabledTestExamples {
-
+public class SumTests {
+    
     @Test
-    public void someTest(TestRailTestReporter customReporter) {
+    public void canAddNumbers(TestRailTestReporter customReporter) {
         customReporter.setProperty("testrail_attachment_1", "path/to/attachment1");
         customReporter.setProperty("testrail_attachment_2", "path/to/attachment2");
     }
 }
+```
+Report testcase element:
+```xml
+<testcase name="CanAddNumbers" classname="tests.SumTests">
+  <properties>
+    <property name="testrail_attachment_1" value="path/to/attachment1"/>
+    <property name="testrail_attachment_2" value="path/to/attachment2"/>
+  </properties>
+</testcase>
 ```
 
 ## Other features and limitations
